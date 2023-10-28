@@ -1,0 +1,63 @@
+#ex4_in_riscv.s
+.data
+	b_print: .asciiz "b is equal to "
+
+.text
+main:
+    addi x13, x0,   5 #Initialize variable a
+    addi x15, x0,   0 #Initialize variable b
+    jal  x1, ex_4  #Jump to ex_4, and return back to this position after ex_4() is finished
+    add  x15, x14, x0 #Load the returned value from Ex_4 in x15; b = ex_4(a)
+    addi x10, x0, 4  
+    la   x11, b_print
+    addi x11, x15,  0 #Store value of x15 in x11 for print in ecall
+    addi x10,  x0,  1 #Store 1 in x10 for printing integers using ecall
+    ecall
+    j exit
+ex_4:
+
+	addi x5,x0,50 #x5=res
+    addi x6,x0,7 #x6=i
+    jal x1,while #jump to while to do the while loop rescission
+  	add x14,x5,x0
+    jalr x0, 0(x1) 
+    
+while:
+	sub x5,x5,x6 #res=res-i
+    addi x6,x6,-1 #i--
+    blt x13,x6,while #i>a if true loop again
+    add x14,x5,x0 #x14=x5 
+    jalr x0, 0(x1) #Return back to caller
+exit:
+
+#ex4_in_riscv.s
+.data
+	b_print: .asciiz "b is equal to "
+
+.text
+main:
+    addi x13, x0,   5 #Initialize variable a
+    addi x15, x0,   0 #Initialize variable b
+    jal  x1, ex_4  #Jump to ex_4, and return back to this position after ex_4() is finished
+    jal x1,while #jump to while to do the while loop rescission
+  	add x14,x5,x0
+    add  x15, x14, x0 #Load the returned value from Ex_4 in x15; b = ex_4(a)
+    addi x10, x0, 4  
+    la   x11, b_print
+    addi x11, x15,  0 #Store value of x15 in x11 for print in ecall
+    addi x10,  x0,  1 #Store 1 in x10 for printing integers using ecall
+    ecall
+    j exit
+ex_4:
+
+    addi x5,x0,50 #x5=res
+    addi x6,x0,7 #x6=i
+    jalr x0, 0(x1) 
+    
+while:
+	sub x5,x5,x6 #res=res-i
+    addi x6,x6,-1 #i--
+    blt x13,x6,while #i>a if true loop again
+    add x14,x5,x0 #x14=x5 
+    jalr x0, 0(x1) #Return back to caller
+exit:
