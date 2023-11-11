@@ -1,0 +1,35 @@
+.data
+arr: .word 30, 25, 20, 15, 10, 5
+arr_length: .word 6
+space_print: .asciiz "  "
+
+.text
+main:
+	la x12, arr
+   	la x13, arr_length
+    lw x7,0(x13) # store the length of the array in x7
+    addi x29,x0,4 
+    mul x28, x7,x29 
+    addi x28, x28,-4 # array start at 0 so -4 to index
+ 	add x12,x12,x28 # gives the array[6] at 0
+input:
+	li   x5,  0x10000100 #start the memory address at 0x10000100
+
+reorder:
+	lw x11, 0(x12) # loads position 0 for x11 	x11=array[6]
+	sw x11, 0(x5) # store x11 to position 0 in the new arry 	new[0]=x11
+	addi x12,x12,-4 #move memory address back one
+    addi x5,x5,4 #move memory address foward one
+    jal out_put # calls out put
+    addi x7,x7,-1 # loop index reduced
+ 	blt x0,x7,reorder # x0<x7
+    jal exit
+out_put:
+	addi x10,  x0,  1 #set the ecall to print dec
+    ecall
+ 	addi x10,  x0,  4 #Store 4 in x10 for printing string using ecall
+    la x11, space_print #store the string memory address in x11
+    ecall  # prints out “ ”
+  	jalr x1
+exit:
+
